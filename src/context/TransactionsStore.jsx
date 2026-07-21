@@ -4,7 +4,10 @@ export const TransactionsContext = createContext();
 
 function TransactionsStore({ children }) {
   const [transactions, setTransactions] = useState([]);
-  console.log("🚀 ~ TransactionsStore ~ transactions:", transactions)
+  /**
+   * 
+   * @todo convert state to reducer {useReducer}
+   */
 
   function addNewTransaction(newtransaction) {
     setTransactions([...transactions, newtransaction]);

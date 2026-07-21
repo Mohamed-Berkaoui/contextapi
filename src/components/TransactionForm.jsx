@@ -3,6 +3,7 @@ import { TransactionsContext } from "../context/TransactionsStore";
 
 function TransactionForm({ onAddTransaction }) {
   const [isIncome, setIsIncome] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
   const incomeCategories = ["Salary", "Freelance", "Other"];
   const expenseCategories = [
     "Food",
@@ -13,7 +14,7 @@ function TransactionForm({ onAddTransaction }) {
     "Health",
     "Other",
   ];
-const {addNewTransaction}=useContext(TransactionsContext)
+  const { addNewTransaction } = useContext(TransactionsContext);
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -24,7 +25,11 @@ const {addNewTransaction}=useContext(TransactionsContext)
       category: form.category.value,
       date: new Date().toISOString().split("T")[0],
     };
-    addNewTransaction(transaction)
+    addNewTransaction(transaction);
+    form.title.value=""
+    form.amount.value=""
+      setShowPopup(true)
+      setTimeout(()=>setShowPopup(false),3000)
   };
 
   const categories = isIncome ? incomeCategories : expenseCategories;
@@ -87,7 +92,9 @@ const {addNewTransaction}=useContext(TransactionsContext)
             </select>
           </div>
         </div>
-
+   {   showPopup&& <div className="popup">
+          <h3>transaction added successfuly</h3>
+        </div>}
         <button type="submit" className="submit-btn">
           Add Transaction
         </button>

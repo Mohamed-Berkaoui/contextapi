@@ -361,8 +361,9 @@ html, body, #root {
 }
 
 .transactions-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2,auto);
+  padding: 30px;
   gap: 15px;
 }
 
@@ -652,4 +653,15 @@ html, body, #root {
   .transaction-amount .amount {
     font-size: 16px;
   }
+}
+
+.popup{
+  width: 100%;
+text-align: center;
+text-transform: capitalize;
+background-color: rgba(0, 128, 53, 0.495);
+border: 2px solid rgb(0, 128, 53);
+border-radius: 10px;
+padding:20px ;
+box-sizing: border-box;
 }

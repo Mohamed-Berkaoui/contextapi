@@ -1,31 +1,61 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer, useState } from "react";
 
 export const TransactionsContext = createContext();
 
-function TransactionsStore({ children }) {
-  const [transactions, setTransactions] = useState([]);
-  /**
-   * 
-   * @todo convert state to reducer {useReducer}
-   */
+function updateState(value) {
+  localStorage.setItem("transactions", JSON.stringify(value));
+  return value;
+}
 
-  function addNewTransaction(newtransaction) {
-    setTransactions([...transactions, newtransaction]);
+function transactionsReducer(state, action) {
+  switch (action.type) {
+    case "ADDTRANSCATION":
+      return updateState([...state, action.payload]);
+
+    case "REMOVETRANSACTION":
+      return updateState(
+        state.filter((item) => item.title != action.payload.title),
+      );
+    case "EDITTRANSACTION":
+      return updateState(
+        state.map((item) =>
+          item.title == action.payload ? action.payload : item,
+        ),
+      );
   }
-  function removeTransaction(transaction) {
-    setTransactions(
-      transactions.filter((item) => item.title != transaction.title),
-    );
-  }
-  function editTransaction(transaction) {
-    setTransactions(
-      transactions.map((item) =>
-        item.title == transaction ? transaction : item,
-      ),
-    );
-  }
+
+  return state;
+}
+function TransactionsStore({ children }) {
+  // const [transactions, setTransactions] = useState([]);
+  // /**
+  //  *
+  //  * @todo convert state to reducer {useReducer}
+  //  */
+
+  // function addNewTransaction(newtransaction) {
+  //   setTransactions([...transactions, newtransaction]);
+  // }
+  // function removeTransaction(transaction) {
+  //   setTransactions(
+  //     transactions.filter((item) => item.title != transaction.title),
+  //   );
+  // }
+  // function editTransaction(transaction) {
+  //   setTransactions(
+  //     transactions.map((item) =>
+  //       item.title == transaction ? transaction : item,
+  //     ),
+  //   );
+  // }
+  const [transactions, dispatchTransactions] = useReducer(
+    transactionsReducer,
+    JSON.parse(localStorage.getItem("transactions")) || [],
+  );
   return (
-    <TransactionsContext.Provider value={{ transactions, addNewTransaction,editTransaction,removeTransaction }}>
+    <TransactionsContext.Provider
+      value={{ transactions, dispatchTransactions }}
+    >
       {children}
     </TransactionsContext.Provider>
   );

@@ -1,5 +1,8 @@
-function transactionCard({ transaction }) {
+import { useContext } from "react"
+import { TransactionsContext } from "../context/TransactionsStore"
 
+function transactionCard({ transaction }) {
+const {dispatchTransactions}=useContext(TransactionsContext)
     return (
 
         <div className="transaction-item">
@@ -56,7 +59,7 @@ function transactionCard({ transaction }) {
 
                     <button className="edit-btn">Edit</button>
 
-                    <button className="delete-btn">Delete</button>
+                    <button className="delete-btn" onClick={()=>dispatchTransactions({type:"REMOVETRANSACTION",payload:transaction})}>Delete</button>
 
                 </div>
 

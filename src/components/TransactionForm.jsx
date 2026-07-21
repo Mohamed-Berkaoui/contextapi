@@ -14,7 +14,7 @@ function TransactionForm({ onAddTransaction }) {
     "Health",
     "Other",
   ];
-  const { addNewTransaction } = useContext(TransactionsContext);
+  const { dispatchTransactions } = useContext(TransactionsContext);
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -25,7 +25,7 @@ function TransactionForm({ onAddTransaction }) {
       category: form.category.value,
       date: new Date().toISOString().split("T")[0],
     };
-    addNewTransaction(transaction);
+    dispatchTransactions({type:"ADDTRANSCATION",payload:transaction});
     form.title.value=""
     form.amount.value=""
       setShowPopup(true)

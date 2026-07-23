@@ -16,10 +16,14 @@ function transactionsReducer(state, action) {
       return updateState(
         state.filter((item) => item.title != action.payload.title),
       );
+      /**
+       *@todo implimznt the edit transactoin action into a new comp
+       */
     case "EDITTRANSACTION":
+      console.log(action)
       return updateState(
         state.map((item) =>
-          item.title == action.payload ? action.payload : item,
+          item.title == action.original.title ? action.payload : item,
         ),
       );
   }

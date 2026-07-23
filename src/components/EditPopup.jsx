@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
 import { TransactionsContext } from "../context/TransactionsStore";
 
-function TransactionForm({ onAddTransaction }) {
+function EditPopup({ setShowEditPopup, transaction }) {
+  const [updatedTransaction, setUpdatedTransaction] = useState(transaction);
+
   const [isIncome, setIsIncome] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const incomeCategories = ["Salary", "Freelance", "Other"];
@@ -17,29 +19,43 @@ function TransactionForm({ onAddTransaction }) {
   const { dispatchTransactions } = useContext(TransactionsContext);
   const handleSubmit = (e) => {
     e.preventDefault();
-    const form = e.target;
-    const transaction = {
-      title: form.title.value,
-      amount: form.amount.value,
-      type: form.type.value,
-      category: form.category.value,
-      date: new Date().toISOString().split("T")[0],
-    };
+
     /**
      * @todo :replace action with action creator
      */
-    dispatchTransactions({ type: "ADDTRANSCATION", payload: transaction });
-    form.title.value = "";
-    form.amount.value = "";
-    setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 3000);
+    dispatchTransactions({
+      type: "EDITTRANSACTION",
+      payload: updatedTransaction,
+      original:transaction
+    });
+
+
+
+    setTimeout(()=>setShowEditPopup(false),500)
   };
 
   const categories = isIncome ? incomeCategories : expenseCategories;
 
   return (
-    <div className="transaction-form-container">
-      <h2>Add New Transaction</h2>
+    <div className="transaction-form-container edit-popup">
+      <h2>Edit Transaction</h2>
+
+      <p className="close" onClick={() => setShowEditPopup(false)}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="800px"
+          height="800px"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z"
+            fill="#0F1729"
+          />
+        </svg>
+      </p>
       <form onSubmit={handleSubmit} className="transaction-form">
         <div className="form-group">
           <label htmlFor="title">Title</label>
@@ -49,6 +65,13 @@ function TransactionForm({ onAddTransaction }) {
             name="title"
             placeholder="Enter transaction title"
             required
+            value={updatedTransaction.title}
+            onChange={(e) =>
+              setUpdatedTransaction({
+                ...updatedTransaction,
+                title: e.target.value,
+              })
+            }
           />
         </div>
 
@@ -62,6 +85,13 @@ function TransactionForm({ onAddTransaction }) {
             step="0.01"
             min="0"
             required
+            value={updatedTransaction.amount}
+            onChange={(e) =>
+              setUpdatedTransaction({
+                ...updatedTransaction,
+                amount: e.target.value,
+              })
+            }
           />
         </div>
 
@@ -75,6 +105,10 @@ function TransactionForm({ onAddTransaction }) {
                 e.target.value == "Income"
                   ? setIsIncome(true)
                   : setIsIncome(false);
+                setUpdatedTransaction({
+                  ...updatedTransaction,
+                  type: e.target.value,
+                });
               }}
             >
               <option value="Income" defaultChecked>
@@ -86,9 +120,22 @@ function TransactionForm({ onAddTransaction }) {
 
           <div className="form-group">
             <label htmlFor="category">Category</label>
-            <select id="category" name="category">
+            <select
+              id="category"
+              name="category"
+              onChange={(e) => {
+                setUpdatedTransaction({
+                  ...updatedTransaction,
+                  category: e.target.value,
+                });
+              }}
+            >
               {categories.map((cat) => (
-                <option key={cat} value={cat}>
+                <option
+                  key={cat}
+                  value={cat}
+                  defaultChecked={updatedTransaction.category == cat}
+                >
                   {cat}
                 </option>
               ))}
@@ -108,4 +155,4 @@ function TransactionForm({ onAddTransaction }) {
   );
 }
 
-export default TransactionForm;
+export default EditPopup;

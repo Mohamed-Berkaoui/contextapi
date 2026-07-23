@@ -665,3 +665,31 @@ border-radius: 10px;
 padding:20px ;
 box-sizing: border-box;
 }
+
+
+.edit-popup{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+
+  width: 50%;
+
+box-shadow: 5px 5px 10px black;
+}
+
+.close,.close svg{
+  width: 50px;
+  height: 50px;
+  /* aspect-ratio: 1/1; */
+  /* position: relative; */
+}
+
+.close{
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #bdbdbd;
+
+  cursor: pointer;
+}

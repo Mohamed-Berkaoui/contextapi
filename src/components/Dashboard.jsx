@@ -6,13 +6,11 @@ import { TransactionsContext } from "../context/TransactionsStore";
 
 import TransactionCard from "./TransactionCard";
 import DashboardSummary from "./DashboardSummary";
+import EditPopup from "./EditPopup";
 
 function Dashboard() {
   const { transactions } = useContext(TransactionsContext);
 
-  const [editingId, setEditingId] = useState(null);
-
-  const [editData, setEditData] = useState(null);
 
   const { expense, income } = transactions.reduce(
     (acc, trans) =>
@@ -35,6 +33,7 @@ console.log({ expense, income } )
           <div className="transactions-list">
             {transactions.map((transaction, i) => (
               <TransactionCard key={i} transaction={transaction} />
+                
             ))}
           </div>
           <DashboardSummary income={income} expense={expense} />
